@@ -1,10 +1,8 @@
 package client;
 
 import client.executor.CommandReader;
-import client.executor.ScriptExecutor;
 import client.message_processing.SendAndGet;
 import client.readers.IReader;
-import client.readers.Reader;
 import client.readers.ReaderS;
 import client.script.ScriptManager;
 import mid.commands.CommandsEnum;
@@ -19,9 +17,6 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import static client.factory.channel.ChannelFactory.getChannel;
-import static client.factory.port.PortFactory.getPort;
-import static client.message_processing.getting.MessageGetter.getMessage;
-import static client.message_processing.sending.MessageSender.sendMessage;
 
 
 public class StartClient {

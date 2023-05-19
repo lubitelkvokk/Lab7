@@ -1,11 +1,11 @@
 package mid.fabrics.commands.instance.with_content.with_group;
 
 
-import server.collection.manager.CollectionManager;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
+import server.collection.manager.CollectionManager;
 
 public class UpdateCommand implements CommandWithGroup, CommandResultTypeString {
     private CollectionManager collectionManager;

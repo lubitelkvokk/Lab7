@@ -8,13 +8,15 @@ import java.util.LinkedList;
 
 public class Message implements Serializable {
 
-    CommandsEnum command;
-    StudyGroup studyGroup;
+    private CommandsEnum command;
+    private StudyGroup studyGroup;
 
-    LinkedList<StudyGroup> studyGroups;
-    String data;
+    private LinkedList<StudyGroup> studyGroups;
+    private String data;
 
-    Integer id;
+    private Integer id;
+
+
 
     public Message(CommandsEnum command) {
         this.command = command;

@@ -1,7 +1,5 @@
 package mid.data;
 
-import lombok.Data;
-
 import java.io.Serializable;
 public enum Semester implements Serializable {
     SECOND(2),

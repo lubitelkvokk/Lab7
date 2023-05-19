@@ -1,10 +1,10 @@
 package mid.fabrics.commands.instance.with_content.with_string;
 
-import server.collection.manager.CollectionManager;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import mid.logger.ColorLogger;
+import server.collection.manager.CollectionManager;
 
 /**
  * Deprecated class because must be realised on client_processing module

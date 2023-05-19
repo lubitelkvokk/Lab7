@@ -1,10 +1,9 @@
 package server.collection.reader;
 
 
-import server.exceptions.InputException;
+import mid.data.StudyGroup;
 import server.collection.checker.CollectionChecker;
-import mid.data.*;
-
+import server.exceptions.InputException;
 
 import java.io.IOException;
 import java.util.Scanner;

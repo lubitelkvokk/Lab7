@@ -1,11 +1,11 @@
 package mid.fabrics.commands.instance.without_content;
 
 
-import server.collection.manager.CollectionManager;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeStudyGroup;
+import server.collection.manager.CollectionManager;
 
 public class MinByNameCommand implements CommandWithoutData, CommandResultTypeStudyGroup {
     private CollectionManager collectionManager;

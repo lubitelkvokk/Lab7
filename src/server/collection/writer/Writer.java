@@ -2,8 +2,8 @@ package server.collection.writer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import server.collection.converter.CustomConverter;
 import mid.data.StudyGroup;
+import server.collection.converter.CustomConverter;
 
 import java.io.BufferedWriter;
 import java.io.File;

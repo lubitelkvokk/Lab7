@@ -3,7 +3,6 @@ package server.collection.converter;
 import com.google.gson.*;
 import mid.data.*;
 
-
 import java.lang.reflect.Type;
 import java.time.ZonedDateTime;
 

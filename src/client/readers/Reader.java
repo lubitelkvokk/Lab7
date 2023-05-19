@@ -3,7 +3,6 @@ package client.readers;
 
 import client.exeptions.InputException;
 import mid.data.*;
-import mid.data.exceptions.WorldBorderException;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;

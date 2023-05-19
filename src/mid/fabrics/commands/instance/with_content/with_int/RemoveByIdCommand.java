@@ -1,9 +1,9 @@
 package mid.fabrics.commands.instance.with_content.with_int;
 
-import server.collection.manager.CollectionManager;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
+import server.collection.manager.CollectionManager;
 
 
 public class RemoveByIdCommand implements CommandWithId, CommandResultTypeString {

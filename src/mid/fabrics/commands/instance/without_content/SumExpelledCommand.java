@@ -1,10 +1,10 @@
 package mid.fabrics.commands.instance.without_content;
 
 
-import server.collection.manager.CollectionManager;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeInt;
+import server.collection.manager.CollectionManager;
 
 public class SumExpelledCommand implements CommandWithoutData, CommandResultTypeInt {
     private CollectionManager collectionManager;

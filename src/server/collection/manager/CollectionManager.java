@@ -1,11 +1,11 @@
 package server.collection.manager;
 
-import server.exceptions.InputException;
-import server.collection.checker.CollectionChecker;
-import server.collection.writer.Writer;
 import mid.data.StudyGroup;
 import mid.fabrics.commands.instance.Command;
 import mid.logger.ColorLogger;
+import server.collection.checker.CollectionChecker;
+import server.collection.writer.Writer;
+import server.exceptions.InputException;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;

@@ -1,8 +1,8 @@
 package server.collection.checker.id.service;
 
 
-import server.exceptions.InputException;
 import server.collection.checker.id.storage.IdStorage;
+import server.exceptions.InputException;
 
 public class IdService {
 

@@ -1,11 +1,11 @@
 package mid.fabrics.commands.instance.without_content;
 
 
-import server.collection.manager.CollectionManager;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeStudyGroups;
+import server.collection.manager.CollectionManager;
 
 import java.util.LinkedList;
 

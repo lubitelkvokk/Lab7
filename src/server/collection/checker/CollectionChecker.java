@@ -1,9 +1,9 @@
 package server.collection.checker;
 
-import server.exceptions.InputException;
+import mid.data.StudyGroup;
 import server.collection.checker.id.service.IdService;
 import server.collection.checker.passports.service.PassportService;
-import mid.data.StudyGroup;
+import server.exceptions.InputException;
 
 import java.util.LinkedList;
 

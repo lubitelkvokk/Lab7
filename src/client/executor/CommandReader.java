@@ -8,10 +8,8 @@ import mid.commands.CommandsEnum;
 import mid.fabrics.message.instance.COMMAND_TYPE;
 import mid.fabrics.message.instance.Message;
 import mid.fabrics.message.instance.MessageType;
-import mid.logger.ColorLogger;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 //TODO Можно назвать класс как Terminal
 

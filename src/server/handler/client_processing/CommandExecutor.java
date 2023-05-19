@@ -1,14 +1,13 @@
 package server.handler.client_processing;
 
-import mid.commands.CommandsEnum;
-import server.collection.manager.CollectionManager;
 import mid.adapters.CommandToMessageAdapter;
+import mid.commands.CommandsEnum;
 import mid.fabrics.commands.instance.Command;
 import mid.fabrics.message.instance.Message;
+import server.collection.manager.CollectionManager;
 import server.exceptions.InputException;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CommandExecutor {

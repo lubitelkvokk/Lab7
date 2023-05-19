@@ -1,8 +1,8 @@
 package server.collection.checker.passports.service;
 
 
-import server.exceptions.InputException;
 import server.collection.checker.passports.storage.PassportStorage;
+import server.exceptions.InputException;
 
 public class PassportService {
 

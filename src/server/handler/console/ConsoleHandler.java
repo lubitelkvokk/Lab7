@@ -1,6 +1,5 @@
 package server.handler.console;
 
-import mid.fabrics.commands.instance.Command;
 import server.collection.manager.CollectionManager;
 
 import java.util.Scanner;

@@ -1,14 +1,13 @@
 package mid.fabrics.commands;
 
+import mid.commands.CommandsEnum;
 import mid.fabrics.commands.instance.Command;
 import mid.fabrics.commands.instance.with_content.with_group.AddCommand;
 import mid.fabrics.commands.instance.with_content.with_group.AddIfMinCommand;
 import mid.fabrics.commands.instance.with_content.with_group.RemoveGreaterCommand;
 import mid.fabrics.commands.instance.with_content.with_group.UpdateCommand;
 import mid.fabrics.commands.instance.with_content.with_int.RemoveByIdCommand;
-import mid.fabrics.commands.instance.with_content.with_string.ExecuteScriptCommand;
 import mid.fabrics.commands.instance.without_content.*;
-import mid.commands.CommandsEnum;
 import mid.fabrics.message.instance.Message;
 
 
