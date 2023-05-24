@@ -4,6 +4,7 @@ package mid.fabrics.commands.instance.without_content;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeStudyGroup;
 import server.collection.manager.CollectionManager;
 
@@ -16,6 +17,11 @@ public class MinByNameCommand implements CommandWithoutData, CommandResultTypeSt
     private CommandResultType commandResultType = CommandResultType.STUDY_GROUP;;
 
     private final String DESCRIPTION = "min_by_name : вывести любой объект из коллекции, значение поля name которого является минимальным";
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -23,7 +29,7 @@ public class MinByNameCommand implements CommandWithoutData, CommandResultTypeSt
 
     @Override
     public void execute() {
-        result = collectionManager.minByName();
+        result = collectionManager.minByName(user);
     }
 
     @Override

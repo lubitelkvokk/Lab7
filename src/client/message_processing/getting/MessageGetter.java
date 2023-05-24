@@ -12,7 +12,7 @@ import java.nio.channels.DatagramChannel;
 public class MessageGetter {
 
     public static Message getMessage(DatagramChannel client) throws IOException, ClassNotFoundException {
-        ByteBuffer bb = ByteBuffer.allocate(1_000_000);
+        ByteBuffer bb = ByteBuffer.allocate(16000);
         client.receive(bb);
         bb.flip();
         byte[] bytes = new byte[bb.remaining()];

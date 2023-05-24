@@ -26,6 +26,9 @@ public enum CommandsEnum {
     RESPONSE_STUDY_GROUP("response_study_group"),
     SAVE("save"),
     EXIT("exit"),
+
+    REGISTER_USER("register"),
+    LOGIN_USER("login"),
     UNKNOWN_COMMAND("unknown");
 
     private final String name;

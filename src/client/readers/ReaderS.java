@@ -1,6 +1,7 @@
 package client.readers;
 
 
+import client.UserAuth;
 import client.exeptions.InputException;
 import mid.data.*;
 
@@ -34,11 +35,12 @@ public class ReaderS implements IReader {
         studyGroup.setTransferredStudents(readTransferredStudents());
         studyGroup.setSemesterEnum(readSemesterEnum());
         studyGroup.setGroupAdmin(readGroupAdmin());
+
         return studyGroup;
     }
 
     @Override
-    public String readLine() throws IOException {
+    public String readLine()  {
         return scanner.nextLine();
     }
 
@@ -383,4 +385,37 @@ public class ReaderS implements IReader {
     public boolean hasNextLine() {
         return scanner.hasNextLine();
     }
+
+
+    @Override
+    public User readUser() {
+        String login = "";
+        readLine();
+        while (login.length() < 8) {
+            try {
+                System.out.print("Введите логин: ");
+                login = readLine().trim();
+                if (login.length() < 8) {
+                    throw new InputException("Длина имени пользователя должен состоять из минимум 8 символов");
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        String password = "";
+        while (password.length() < 8) {
+            try {
+                System.out.print("Введите пароль: ");
+                password = readLine().trim();
+                if (password.length() < 8) {
+                    throw new InputException("Длина пароля должна состоять из минимум 8 символов");
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return new User(login, password);
+    }
+
+
 }

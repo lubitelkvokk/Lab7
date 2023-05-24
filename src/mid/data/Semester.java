@@ -18,7 +18,7 @@ public enum Semester implements Serializable {
         return number;
     }
 
-    public Semester getSemester(int number) {
+    public static Semester getSemester(int number) {
         for (Semester x : Semester.values()) {
             if (number == x.getNumber()) {
                 return x;

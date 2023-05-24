@@ -60,9 +60,10 @@ public class ClientHandler implements Runnable {
                             DatagramChannel curdc = (DatagramChannel) sk.channel();
                             InetSocketAddress address = (InetSocketAddress) curdc.receive(bb);
                             // accept mid.data
-                            Command command = CommandFabric.createCommand(getMessage(bb));
+                            Message message = getMessage(bb);
+                            Command command = CommandFabric.createCommand(message);
                             sendMessage(curdc,
-                                    commandExecutor.runCommand(command, collectionManager),
+                                    commandExecutor.runCommand(command),
                                     address);
                         }
                     }

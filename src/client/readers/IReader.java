@@ -1,6 +1,7 @@
 package client.readers;
 
 import mid.data.StudyGroup;
+import mid.data.User;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -15,9 +16,12 @@ public interface IReader {
 
     void close() throws IOException;
 
-    public Stream<String> getStream();
+    Stream<String> getStream();
 
-    public String readFromFile(String path) throws IOException;
+    String readFromFile(String path) throws IOException;
 
     boolean hasNextLine();
+
+    User readUser();
+
 }

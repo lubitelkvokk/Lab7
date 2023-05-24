@@ -3,6 +3,7 @@ package mid.fabrics.commands.instance.without_content;
 
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 import server.exceptions.InputException;
@@ -15,6 +16,11 @@ public class RemoveFirstCommand implements CommandWithoutData, CommandResultType
     private CommandResultType commandResultType = CommandResultType.STRING;
     private final String DESCRIPTION = "remove_first : удалить первый элемент из коллекции";
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -23,7 +29,7 @@ public class RemoveFirstCommand implements CommandWithoutData, CommandResultType
 
     @Override
     public void execute() throws InputException {
-        result = collectionManager.removeFirst();
+        result = collectionManager.removeFirst(user);
     }
 
     @Override

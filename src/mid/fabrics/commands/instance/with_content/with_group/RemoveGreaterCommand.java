@@ -4,6 +4,7 @@ package mid.fabrics.commands.instance.with_content.with_group;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 import server.exceptions.InputException;
@@ -18,6 +19,11 @@ public class RemoveGreaterCommand implements CommandWithGroup, CommandResultType
     private final String DESCRIPTION = "remove_greater {element} : удалить из коллекции все элементы, превышающие заданный";
     private StudyGroup studyGroup;
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public CommandsEnum getName() {
         return name;
@@ -31,7 +37,7 @@ public class RemoveGreaterCommand implements CommandWithGroup, CommandResultType
 
     @Override
     public void execute() throws InputException {
-        result = collectionManager.removeGreater(studyGroup);
+        result = collectionManager.removeGreater(user,studyGroup);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package server.collection.db.dao;
 
-import server.collection.db.entities.User;
+
+import mid.data.User;
 
 public interface UserDAO {
     boolean registerUser(User user);

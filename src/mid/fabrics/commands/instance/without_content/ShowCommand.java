@@ -4,6 +4,7 @@ package mid.fabrics.commands.instance.without_content;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeStudyGroups;
 import server.collection.manager.CollectionManager;
 
@@ -17,6 +18,12 @@ public class ShowCommand implements CommandWithoutData, CommandResultTypeStudyGr
 
     private CommandResultType commandResultType = CommandResultType.STUDY_GROUPS;
     private final String DESCRIPTION = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
+
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -25,7 +32,7 @@ public class ShowCommand implements CommandWithoutData, CommandResultTypeStudyGr
 
     @Override
     public void execute() {
-        result = collectionManager.show();
+        result = collectionManager.show(user);
     }
 
 

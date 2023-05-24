@@ -4,6 +4,7 @@ package mid.fabrics.commands.instance.with_content.with_group;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 
@@ -16,6 +17,11 @@ public class UpdateCommand implements CommandWithGroup, CommandResultTypeString 
     private final String DESCRIPTION = "update id {element} : обновить значение элемента коллекции, id которого равен заданному";
     private StudyGroup studyGroup;
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public CommandsEnum getName() {
         return name;
@@ -29,7 +35,7 @@ public class UpdateCommand implements CommandWithGroup, CommandResultTypeString 
 
     @Override
     public void execute() {
-        result = collectionManager.update(studyGroup);
+        result = collectionManager.update(user,studyGroup);
     }
 
     @Override

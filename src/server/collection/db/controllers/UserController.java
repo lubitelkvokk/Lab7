@@ -1,6 +1,6 @@
 package server.collection.db.controllers;
 
-import server.collection.db.entities.User;
+import mid.data.User;
 import server.collection.db.services.user.HashPasswordBuilder;
 import server.collection.db.services.user.UserService;
 

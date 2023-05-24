@@ -3,6 +3,7 @@ package mid.fabrics.commands.instance.without_content;
 
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 
@@ -15,6 +16,11 @@ public class InfoCommand implements CommandWithoutData, CommandResultTypeString 
     private CommandResultType commandResultType = CommandResultType.STRING;
     private final String DESCRIPTION = "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)";
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -22,7 +28,7 @@ public class InfoCommand implements CommandWithoutData, CommandResultTypeString 
 
     @Override
     public void execute() {
-        result = collectionManager.info();
+        result = collectionManager.info(user);
     }
 
     @Override

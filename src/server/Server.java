@@ -10,35 +10,41 @@ import mid.fabrics.commands.instance.without_content.*;
 import server.collection.converter.ParsingCollection;
 import server.collection.manager.CollectionManager;
 import server.handler.client_processing.ClientHandler;
+import server.handler.client_processing.NewClientHandler;
 import server.handler.console.ConsoleHandler;
 
+import javax.xml.crypto.Data;
+import java.io.IOException;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
 
 
 public class Server {
 
     private static final Logger logger = Logger.getLogger(Server.class.getName());
-    public static void main(String[] args) {
-        Command[] commands = new Command[]{new AddCommand(), new AddIfMinCommand(),
-                new UpdateCommand(), new RemoveGreaterCommand(), new RemoveByIdCommand(),
-                new AverageOfShouldBeExpelledCommand(), new SumExpelledCommand(), new InfoCommand(),
-                new MinByNameCommand(), new ShowCommand(), new ClearCommand(),
-                new RemoveFirstCommand(), new HelpCommand()};
 
-        ParsingCollection parsingCollection = new ParsingCollection();
-        try {
-            CollectionManager collectionManager = new CollectionManager(
-                    commands,
-                    parsingCollection.parseCollectionFromFile(System.getenv("KVOKKA")));
-            Thread thread = new Thread(new ConsoleHandler(collectionManager));
-            thread.start();
-            ClientHandler clientHandler = new ClientHandler(collectionManager, commands, Integer.parseInt(args[0].trim()));
-            clientHandler.run();
-        } catch (Exception e) {
-            logger.warning(e.getMessage());
+    public static void main(String[] args) throws IOException {
+
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        DatagramChannel server = DatagramChannel.open();
+        server.bind(new InetSocketAddress(Integer.parseInt(args[0])));
+
+
+        while (true) {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(65535);
+            SocketAddress socketAddress = server.receive(byteBuffer);
+            byteBuffer.flip();
+            byte[] buf = byteBuffer.array();
+            logger.info("Обработка клиента" + socketAddress);
+            NewClientHandler clientHandler = new NewClientHandler(server, buf, socketAddress);
+            Thread thread = new Thread(clientHandler);
+            executor.submit(thread);
         }
-        //Устанавливаем CollectionManager для всех команд и указываем какие команды разрешены для использования
-
-
     }
 }

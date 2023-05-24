@@ -3,6 +3,7 @@ package mid.fabrics.commands.instance.without_content;
 
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 
@@ -15,6 +16,12 @@ public class HelpCommand implements CommandWithoutData, CommandResultTypeString 
     private CommandResultType commandResultType = CommandResultType.STRING;
     private final String DESCRIPTION = "help : вывести справку по доступным командам";
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -22,7 +29,7 @@ public class HelpCommand implements CommandWithoutData, CommandResultTypeString 
 
     @Override
     public void execute() {
-        result = collectionManager.help();
+        result = collectionManager.help(user);
     }
 
 

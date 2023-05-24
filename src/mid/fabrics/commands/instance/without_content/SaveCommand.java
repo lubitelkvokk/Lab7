@@ -3,6 +3,7 @@ package mid.fabrics.commands.instance.without_content;
 
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 
@@ -15,6 +16,11 @@ public class SaveCommand implements CommandWithoutData, CommandResultTypeString 
     private CommandResultType commandResultType = CommandResultType.STRING;
     private final String DESCRIPTION = "save : сохранить коллекцию в файл";
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -23,7 +29,7 @@ public class SaveCommand implements CommandWithoutData, CommandResultTypeString 
 
     @Override
     public void execute() {
-        result = collectionManager.save();
+        result = collectionManager.save(user);
     }
 
     public void setCollectionManager(CollectionManager collectionManager) {

@@ -1,13 +1,19 @@
 package mid.fabrics.message.instance;
 
+import lombok.Data;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
+import mid.data.User;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 
+
+
+@Data
 public class Message implements Serializable {
 
+    private User user;
     private CommandsEnum command;
     private StudyGroup studyGroup;
 
@@ -41,50 +47,9 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public CommandsEnum getCommand() {
-        return command;
-    }
-
-
-
-    public StudyGroup getStudyGroup() {
-        return studyGroup;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setCommand(CommandsEnum command) {
-        this.command = command;
-    }
-
-    public void setStudyGroup(StudyGroup studyGroup) {
-        this.studyGroup = studyGroup;
-    }
-
-
-    public LinkedList<StudyGroup> getStudyGroups() {
-        return studyGroups;
-    }
-    public void setStudyGroups(LinkedList<StudyGroup> studyGroups) {
-        this.studyGroups = studyGroups;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
     public Message(CommandsEnum command, Integer id) {
         this.command = command;
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 }

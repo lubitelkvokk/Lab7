@@ -1,20 +1,31 @@
 package server.collection.manager;
 
 import mid.data.StudyGroup;
+import mid.data.User;
 import mid.fabrics.commands.instance.Command;
+import mid.fabrics.commands.instance.with_content.with_group.*;
+import mid.fabrics.commands.instance.with_content.with_int.*;
+import mid.fabrics.commands.instance.without_content.*;
 import mid.logger.ColorLogger;
 import server.collection.checker.CollectionChecker;
+import server.collection.db.services.GroupAndPersonService;
+import server.collection.db.services.PersonService;
+import server.collection.db.services.StudyGroupService;
 import server.collection.writer.Writer;
 import server.exceptions.InputException;
+import server.handler.client_processing.UserAuth;
 
+import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CollectionManager {
+    private static final Logger logger = Logger.getLogger(CollectionManager.class.getName());
 
     private LinkedList<StudyGroup> studyGroups;
     private final CollectionChecker collectionChecker;
@@ -22,36 +33,68 @@ public class CollectionManager {
     private final ZonedDateTime zonedDateTime;
     private final Command[] allowedCommands;
 
-    public CollectionManager(Command[] commands, LinkedList<StudyGroup> studyGroups) throws InputException {
+    private static CollectionManager collectionManager = null;
 
-        this.allowedCommands = commands;
+    private CollectionManager() throws InputException {
+
+        this.allowedCommands = new Command[]{new AddCommand(), new AddIfMinCommand(),
+                new UpdateCommand(), new RemoveGreaterCommand(), new RemoveByIdCommand(),
+                new AverageOfShouldBeExpelledCommand(), new SumExpelledCommand(), new InfoCommand(),
+                new MinByNameCommand(), new ShowCommand(), new ClearCommand(),
+                new RemoveFirstCommand(), new HelpCommand()};
         zonedDateTime = ZonedDateTime.now();
-        // фиктивно формируем коллекцию
-        this.studyGroups = studyGroups;
-        this.collectionChecker = new CollectionChecker(studyGroups);
+
+        try {
+            this.studyGroups = new StudyGroupService().getAllStudyGroups();
+        } catch (Exception e) {
+            studyGroups = new LinkedList<>();
+            logger.warning(e.getMessage());
+            throw new InputException("В настоящее время база данных не отвечает");
+        } finally {
+            this.collectionChecker = new CollectionChecker(studyGroups);
+        }
     }
 
-    public String add(StudyGroup studyGroup) throws InputException {
+    public static synchronized CollectionManager getInstance() throws InputException {
+        if (collectionManager == null) {
+            collectionManager = new CollectionManager();
+        }
+        return collectionManager;
+    }
+
+    public synchronized String add(User user, StudyGroup studyGroup) throws InputException {
         // Проверяем уникальность паспортных данных
         try {
             collectionChecker.addPassport((studyGroup.getGroupAdmin().getPassportID()));
-            studyGroup.setId(collectionChecker.getFreeId());
+//            studyGroup.setId(collectionChecker.getFreeId());
+
+            PersonService personService = new PersonService();
+            personService.addPerson(studyGroup.getGroupAdmin());
+            user.setPassword("");
+            studyGroup.setUser(user);
+            StudyGroupService studyGroupService = new StudyGroupService();
+            studyGroupService.addStudyGroup(studyGroup);
+//            studyGroups.add(studyGroup);
         } catch (InputException e) {
             throw new InputException(e.getMessage());
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            throw new InputException("Ошибка при добавлении");
         }
         studyGroups.add(studyGroup);
         return "Элемент успешно добавлен";
     }
 
-    public String addIfMin(StudyGroup studyGroup) throws InputException {
+    public synchronized String addIfMin(User user, StudyGroup studyGroup) throws InputException {
         if (Collections.min(studyGroups).compareTo(studyGroup) > -1) {
-            return add(studyGroup);
+
+            return add(user, studyGroup);
         } else {
             throw new InputException("Данный элемент не минимальный");
         }
     }
 
-    public String removeGreater(StudyGroup studyGroup) throws InputException {
+    public synchronized String removeGreater(User user, StudyGroup studyGroup) throws InputException {
         if (studyGroups.removeIf(x -> x.compareTo(studyGroup) > 0)) {
             return "Удаление прошло успешно";
         } else {
@@ -59,7 +102,7 @@ public class CollectionManager {
         }
     }
 
-    public String update(StudyGroup studyGroup) {
+    public synchronized String update(User user, StudyGroup studyGroup) {
         studyGroups.stream().filter(x -> studyGroup.getId().equals(x.getId())).findFirst()
                 .map(x -> {
                     studyGroups.set(studyGroups.indexOf(x), studyGroup);
@@ -68,34 +111,42 @@ public class CollectionManager {
         return "Группы с таким id не найдено";
     }
 
-    public String removeById(Integer id) {
+    public synchronized String removeById(User user, Integer id) throws InputException {
 
-        studyGroups.stream().filter(x -> x.getId().equals(id)).findFirst().
-                map(x -> {
+        try {
+
+
+            GroupAndPersonService.removeStudyGroupsWithGroupAdmin(user, id);
+            for (StudyGroup x : studyGroups) {
+                if (x.getId().equals(id)) {
                     studyGroups.remove(x);
                     return "Удаление прошло успешно";
-                });
-
-        throw new NullPointerException("Элемент с таким id не найден");
+                }
+            }
+            throw new InputException("Такой элемент не найден");
+        } catch (SQLException e) {
+            throw new InputException(e.getMessage());
+        }
     }
 
-    public Integer averageOfShouldBeExpelled() {
+    public synchronized Integer averageOfShouldBeExpelled(User user) {
         long sum = studyGroups.stream()
                 .mapToLong(StudyGroup::getShouldBeExpelled)
                 .sum();
         return (int) ((double) sum / studyGroups.size());
     }
 
-    public String clear() {
+    public synchronized String clear(User user) {
         studyGroups = new LinkedList<>();
+
         return ColorLogger.logInfo("Коллекция успешно очищена!");
     }
 
-    public String exit() {
+    public synchronized String exit() {
         return "Данный метод недоступен пользователю";
     }
 
-    public String help() {
+    public synchronized String help(User user) {
         return ColorLogger.logInfo(
                 Arrays.stream(allowedCommands)
                         .map(Command::getDescription)
@@ -103,7 +154,7 @@ public class CollectionManager {
                         .collect(Collectors.joining()));
     }
 
-    public String info() {
+    public synchronized String info(User user) {
         return ("Тип коллекции: " +
                 studyGroups.getClass().getSimpleName() + "\n" +
                 "Количество элементов в коллекции: " +
@@ -111,7 +162,7 @@ public class CollectionManager {
                 + zonedDateTime);
     }
 
-    public StudyGroup minByName() {
+    public synchronized StudyGroup minByName(User user) {
         StudyGroup minByName = null;
         if (studyGroups.isEmpty()) {
             throw new NullPointerException("Коллекция пустая");
@@ -121,7 +172,7 @@ public class CollectionManager {
                 .orElse(null);
     }
 
-    public String removeFirst() throws InputException {
+    public synchronized String removeFirst(User user) throws InputException {
         if (studyGroups.size() == 0) {
             throw new InputException("Коллекция уже пустая");
         } else {
@@ -130,17 +181,17 @@ public class CollectionManager {
         }
     }
 
-    public String save() {
+    public synchronized String save(User user) {
         Writer writer = new Writer();
         writer.writeInFile(System.getenv("KVOKKA"), studyGroups);
         return "Коллекция успешно сохранена";
     }
 
-    public LinkedList<StudyGroup> show() {
+    public synchronized LinkedList<StudyGroup> show(User user) {
         return studyGroups;
     }
 
-    public Integer sumOfShouldBeExpelled() {
+    public synchronized Integer sumOfShouldBeExpelled(User user) {
         int sum = 0;
         for (StudyGroup x : studyGroups) {
             sum += x.getShouldBeExpelled();

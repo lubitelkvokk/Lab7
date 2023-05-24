@@ -4,6 +4,7 @@ package mid.fabrics.commands.instance.with_content.with_group;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 import server.exceptions.InputException;
@@ -12,6 +13,7 @@ public class AddCommand implements CommandWithGroup, CommandResultTypeString {
     private CollectionManager collectionManager;
     private CommandsEnum name = CommandsEnum.ADD;
 
+    private User user;
     private String result;
 
     private CommandResultType commandResultType = CommandResultType.STRING;
@@ -41,7 +43,12 @@ public class AddCommand implements CommandWithGroup, CommandResultTypeString {
 
     @Override
     public void execute() throws InputException {
-        result =  collectionManager.add(studyGroup);
+        result =  collectionManager.add(user, studyGroup);
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

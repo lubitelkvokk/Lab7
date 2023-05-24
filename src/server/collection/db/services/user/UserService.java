@@ -1,7 +1,7 @@
 package server.collection.db.services.user;
 
+import mid.data.User;
 import server.collection.db.dao.UserDAO;
-import server.collection.db.entities.User;
 import server.collection.db.util.DbConnector;
 
 import java.sql.Connection;
@@ -23,7 +23,8 @@ public class UserService implements UserDAO {
         String sql = "INSERT INTO \"user\" (login,password) values(?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
+            String password = HashPasswordBuilder.hashPassword(user.getPassword(), user.getLogin().getBytes());
+            preparedStatement.setString(2, password);
             preparedStatement.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -61,5 +62,14 @@ public class UserService implements UserDAO {
         }
     }
 
+
+    public int getUserId(User user) throws SQLException {
+        String sql = "SELECT id FROM \"user\" WHERE login=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, user.getLogin());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt(1);
+    }
 
 }

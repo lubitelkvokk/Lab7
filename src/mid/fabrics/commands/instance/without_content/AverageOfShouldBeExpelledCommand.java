@@ -3,6 +3,7 @@ package mid.fabrics.commands.instance.without_content;
 
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeInt;
 import server.collection.manager.CollectionManager;
 
@@ -15,6 +16,11 @@ public class AverageOfShouldBeExpelledCommand implements CommandWithoutData, Com
     private CommandResultType commandResultType = CommandResultType.INT;
     private final String DESCRIPTION = "average_of_should_be_expelled : вывести среднее значение поля shouldBeExpelled для всех элементов коллекции";
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -38,7 +44,7 @@ public class AverageOfShouldBeExpelledCommand implements CommandWithoutData, Com
 
     @Override
     public void execute() {
-        result = collectionManager.averageOfShouldBeExpelled();
+        result = collectionManager.averageOfShouldBeExpelled(user);
     }
 
     @Override

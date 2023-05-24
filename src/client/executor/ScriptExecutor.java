@@ -16,6 +16,8 @@ import java.nio.channels.DatagramChannel;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import static client.factory.channel.ChannelFactory.getChannel;
+import static client.factory.port.PortFactory.getPort;
 import static client.message_processing.getting.MessageGetter.getMessage;
 import static client.message_processing.sending.MessageSender.sendMessage;
 

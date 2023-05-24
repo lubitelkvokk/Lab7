@@ -3,6 +3,7 @@ package mid.fabrics.commands.instance.without_content;
 
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeInt;
 import server.collection.manager.CollectionManager;
 
@@ -15,6 +16,12 @@ public class SumExpelledCommand implements CommandWithoutData, CommandResultType
     private Integer result;
     private final CommandResultType commandResultType = CommandResultType.INT;
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String getDescription() {
         return DESCRIPTION;
@@ -23,7 +30,7 @@ public class SumExpelledCommand implements CommandWithoutData, CommandResultType
 
     @Override
     public void execute() {
-        result = collectionManager.sumOfShouldBeExpelled();
+        result = collectionManager.sumOfShouldBeExpelled(user);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package client.readers;
 
 
+import client.UserAuth;
 import client.exeptions.InputException;
 import mid.data.*;
 
@@ -326,4 +327,31 @@ public class Reader implements IReader {
     public boolean hasNextLine() {
         return scanner.hasNextLine();
     }
+
+    @Override
+    public User readUser() {
+        String login = "";
+        while (login.length() < 8) {
+            try {
+                login = readLine().trim();
+                if (login.length() < 8) {
+                    throw new InputException("Длина имени пользователя должен состоять из минимум 8 символов");
+                }
+            } catch (IOException e) {
+            }
+        }
+        String password = "";
+        while (password.length() < 8) {
+            try {
+                password = readLine().trim();
+                if (password.length() < 8) {
+                    throw new InputException("Длина пароля должна состоять из минимум 8 символов");
+                }
+            } catch (IOException e) {
+            }
+        }
+        return new User(login, password);
+    }
+
+
 }

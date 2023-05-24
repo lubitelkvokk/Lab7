@@ -4,6 +4,7 @@ package mid.fabrics.commands.instance.with_content.with_group;
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
 import mid.data.StudyGroup;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 import server.exceptions.InputException;
@@ -15,6 +16,12 @@ public class AddIfMinCommand implements CommandWithGroup, CommandResultTypeStrin
     private String result;
 
     private CommandResultType commandResultType = CommandResultType.STRING;
+
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
     private final String DESCRIPTION = "add_if_min {element} : " +
             "добавить новый элемент в коллекцию, если его значение меньше, " +
             "чем у наименьшего элемента этой коллекции";
@@ -34,7 +41,7 @@ public class AddIfMinCommand implements CommandWithGroup, CommandResultTypeStrin
 
     @Override
     public void execute() throws InputException {
-        result = collectionManager.addIfMin(studyGroup);
+        result = collectionManager.addIfMin(user,studyGroup);
     }
 
     @Override

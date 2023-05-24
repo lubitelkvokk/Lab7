@@ -20,6 +20,8 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     private Semester semesterEnum; //Поле не может быть null
     private Person groupAdmin; //Поле не может быть null
 
+    private User user;
+
     public StudyGroup( String name,
                       Coordinates coordinates,
                       ZonedDateTime creationDate,
@@ -53,6 +55,7 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     @Override
     public String toString() {
         return "{" +
+                "\n\t user=" + user.getLogin() +
                 "\n\t id=" + id +
                 ",\n\t name='" + name + '\'' +
                 ",\n\t coordinates=" + coordinates +

@@ -23,7 +23,6 @@ public class CommandFabric {
      */
     public static Command createCommand(Message message) {
         CommandsEnum commandEnum = message.getCommand();
-
         switch (commandEnum) {
             case ADD:
                 AddCommand addCommand = new AddCommand();

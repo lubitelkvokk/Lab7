@@ -2,6 +2,7 @@ package mid.fabrics.commands.instance.with_content.with_string;
 
 import mid.commands.CommandResultType;
 import mid.commands.CommandsEnum;
+import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import mid.logger.ColorLogger;
 import server.collection.manager.CollectionManager;
@@ -23,6 +24,11 @@ public class ExecuteScriptCommand implements CommandWithString, CommandResultTyp
                     "В скрипте содержатся команды в таком же виде, в котором их вводит");
     private String data;
 
+    private User user;
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public void setCollectionManager(CollectionManager collectionManager) {

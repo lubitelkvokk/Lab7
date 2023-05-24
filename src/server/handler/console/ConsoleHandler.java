@@ -1,5 +1,6 @@
 package server.handler.console;
 
+import mid.data.User;
 import server.collection.manager.CollectionManager;
 
 import java.util.Scanner;
@@ -19,7 +20,7 @@ public class ConsoleHandler implements Runnable {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             if (scanner.next().trim().equals("save")) {
-                logger.info(collectionManager.save());
+                logger.info(collectionManager.save(new User("ADMIN", "ADMIN")));
             }
         }
     }

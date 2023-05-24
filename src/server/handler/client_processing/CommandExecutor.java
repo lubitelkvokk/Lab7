@@ -21,23 +21,21 @@ public class CommandExecutor {
         this.commands = commands;
     }
 
-    public Message runCommand(Command command, CollectionManager collectionManager) {
-        logger.entering(className, "runCommand", new Object[]{command, collectionManager});
+    public Message runCommand(Command command) throws InputException {
 
-        if (Arrays.stream(commands).noneMatch(x -> x.getName().equals(command.getName()))) {
-            return new Message(CommandsEnum.RESPONSE_ERR, "Данная команда не поддерживается сервером");
+        try {
+            command.setCollectionManager(CollectionManager.getInstance());
+        } catch (InputException e) {
+            return new Message(CommandsEnum.RESPONSE_ERR, e.getMessage());
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
         }
-        command.setCollectionManager(collectionManager);
+
         try {
             command.execute();
         } catch (NullPointerException | InputException e) {
             return new Message(CommandsEnum.RESPONSE_ERR, e.getMessage());
         }
-
-        Message response = CommandToMessageAdapter.getMessage(command);
-
-        logger.exiting(className, "runCommand", response);
-
-        return response;
+        return CommandToMessageAdapter.getMessage(command);
     }
 }
