@@ -60,7 +60,7 @@ public class NewClientHandler implements Runnable {
                         "Регистрация прошла успешно"), client);
             } else {
                 request.getUser().setId(new UserService().getUserId(request.getUser()));
-                System.out.println(request.getUser());
+                logger.info(request.getUser().getLogin() + " is served");
                 CommandExecutor commandExecutor = new CommandExecutor(new Command[]{new AddCommand(), new AddIfMinCommand(),
                         new UpdateCommand(), new RemoveGreaterCommand(), new RemoveByIdCommand(),
                         new AverageOfShouldBeExpelledCommand(), new SumExpelledCommand(), new InfoCommand(),

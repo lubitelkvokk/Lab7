@@ -7,6 +7,7 @@ import mid.data.StudyGroup;
 import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
+import server.exceptions.InputException;
 
 public class UpdateCommand implements CommandWithGroup, CommandResultTypeString {
     private CollectionManager collectionManager;
@@ -34,7 +35,7 @@ public class UpdateCommand implements CommandWithGroup, CommandResultTypeString 
 
 
     @Override
-    public void execute() {
+    public void execute() throws InputException {
         result = collectionManager.update(user,studyGroup);
     }
 

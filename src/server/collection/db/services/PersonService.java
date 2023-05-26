@@ -1,10 +1,9 @@
 package server.collection.db.services;
 
-import mid.data.Color;
-import mid.data.Location;
-import mid.data.Person;
+import mid.data.*;
 import server.collection.db.dao.PersonDAO;
 import server.collection.db.util.DbConnector;
+import server.exceptions.InputException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -64,7 +63,7 @@ public class PersonService implements PersonDAO {
     private Person getPerson(ResultSet resultSet) throws SQLException {
         Person result = new Person();
         result.setPassportID(resultSet.getString("passportId"));
-        result.setEyeColor(Color.valueOf(resultSet.getString("eyeColor")));
+        result.setEyeColor(Color.getColorByName(resultSet.getString("eyeColor")));
         result.setHeight(resultSet.getLong("height"));
         result.setName(resultSet.getString("name"));
         Location location = new Location();
@@ -96,10 +95,60 @@ public class PersonService implements PersonDAO {
     }
 
 
-    public void removePersonById(Integer id) throws SQLException {
-        String sql = "DELETE  FROM person WHERE id=?";
+    public void removeStudyGroupById(User user, Integer id) throws SQLException, InputException {
+        String sql = "DELETE  FROM person WHERE id IN (SELECT groupadmin FROM study_group WHERE id=? AND user_id=?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1,id);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setInt(2, user.getId());
+        if (preparedStatement.executeUpdate() == 0) {
+            throw new InputException("Элемента из вашей коллекции с таким id не было найдено");
+        }
+        ;
+    }
+
+    public void removeGreater(User user, StudyGroup studyGroup) throws SQLException, InputException {
+        String sql = "DELETE FROM person WHERE id IN (SELECT groupadmin FROM study_group WHERE user_id=? AND studentscount > ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, user.getId());
+        preparedStatement.setInt(2, studyGroup.getStudentsCount());
+        if (preparedStatement.executeUpdate() == 0) {
+            throw new InputException("Больших элементов не найдено");
+
+        }
+    }
+
+    public void updatePersonById(User user, Person person, Integer id) throws SQLException, InputException {
+        String sql = "UPDATE person SET " +
+                "name=?," +
+                "passportid=?," +
+                "eyecolor=?," +
+                " \"locationName\" =?," +
+                "x=?," +
+                "y=?," +
+                "z=?," +
+                "height=? " +
+                "WHERE id in (SELECT groupadmin FROM study_group WHERE id=? AND user_id=? )";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(9, id);
+        preparedStatement.setInt(10, user.getId());
+        preparedStatement.setString(1, person.getName());
+        preparedStatement.setString(2, person.getPassportID());
+        preparedStatement.setString(3, person.getEyeColor().name());
+        preparedStatement.setString(4, person.getLocation().getName());
+        preparedStatement.setDouble(5, person.getLocation().getX());
+        preparedStatement.setDouble(6, person.getLocation().getY());
+        preparedStatement.setInt(7, person.getLocation().getZ());
+        preparedStatement.setLong(8, person.getHeight());
+        if (preparedStatement.executeUpdate() == 0) {
+            throw new InputException("Элемента с таким id не найдено");
+        }
+    }
+
+    public void removeAllPeople(User user) throws SQLException {
+        String sql = "DELETE FROM person WHERE id IN (SELECT groupadmin FROM study_group" +
+                " WHERE user_id=?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, user.getId());
         preparedStatement.executeUpdate();
     }
 }

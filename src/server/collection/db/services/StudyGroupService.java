@@ -1,15 +1,13 @@
 package server.collection.db.services;
 
 import mid.data.*;
-import server.collection.db.dao.PersonDAO;
 import server.collection.db.dao.StudyGroupDAO;
 import server.collection.db.util.DbConnector;
+import server.exceptions.InputException;
 
 import java.sql.*;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.LinkedList;
-import java.util.TimeZone;
 
 public class StudyGroupService implements StudyGroupDAO {
 
@@ -19,11 +17,14 @@ public class StudyGroupService implements StudyGroupDAO {
     }
 
     @Override
-    public StudyGroup getStudyGroupById(Integer id) throws SQLException {
+    public StudyGroup getStudyGroupById(Integer id) throws SQLException, InputException {
         String sql = "SELECT * FROM study_group WHERE id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
+        if (!resultSet.isBeforeFirst()){
+            throw new InputException("Такой элемент не найден");
+        }
         resultSet.next();
         StudyGroup studyGroup = new StudyGroup();
         studyGroup.setId(id);
@@ -83,7 +84,7 @@ public class StudyGroupService implements StudyGroupDAO {
     }
 
     @Override
-    public void updateStudyGroup(StudyGroup group) throws SQLException {
+    public void updateStudyGroup(User user, StudyGroup group) throws SQLException, InputException {
         String sql = "UPDATE study_group SET " +
                 "name=?," +
                 "x=?," +
@@ -92,16 +93,23 @@ public class StudyGroupService implements StudyGroupDAO {
                 "studentscount=?," +
                 "shouldbeexpelled=?," +
                 "transferredstudents=?," +
-                "semesterenum=?," +
-                "groupadmin=? " +
-                "WHERE id=?";
+                "semesterenum=?" +
+                "WHERE id=? and user_id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, group.getName());
+
         preparingStatement(group, preparedStatement);
+        StudyGroupService studyGroupService = new StudyGroupService();
+        StudyGroup previousGroup = studyGroupService.getStudyGroupById(group.getId());
+        Integer personId = previousGroup.getId();
         PersonService personService = new PersonService();
-        preparedStatement.setInt(9, personService.getPersonIdByPerson(group.getGroupAdmin()));
-        preparedStatement.setInt(10, group.getId());
-        preparedStatement.executeUpdate();
+        personService.updatePersonById(user, group.getGroupAdmin(), personId);
+        preparedStatement.setInt(9, group.getId());
+        preparedStatement.setInt(10, user.getId());
+        if (preparedStatement.executeUpdate() == 0) {
+            throw new InputException("Элемента из вашей коллекции с таким id не найдено");
+        }
+
     }
 
     @Override
@@ -127,7 +135,6 @@ public class StudyGroupService implements StudyGroupDAO {
             Person person = new Person();
             person.setName(resultSet.getString(12));
             person.setPassportID(resultSet.getString("passportid"));
-            System.out.println(result);
             person.setEyeColor(Color.getColorByName(resultSet.getString("eyecolor")));
             Location location = new Location();
             location.setName(resultSet.getString("locationname"));
@@ -140,8 +147,6 @@ public class StudyGroupService implements StudyGroupDAO {
             user.setLogin(resultSet.getString("login"));
             studyGroup.setUser(user);
             studyGroup.setGroupAdmin(person);
-
-
             result.add(studyGroup);
         }
         return result;
@@ -158,13 +163,29 @@ public class StudyGroupService implements StudyGroupDAO {
     }
 
 
-    public Integer getGroupAdminIdByStudyGroupId(Integer id) throws SQLException {
-        String sql = "SELECT user_id from study_group WHERE id = ?";
+    public Integer getGroupAdminIdByStudyGroupId(Integer id) throws SQLException, InputException {
+        String sql = "SELECT groupadmin from study_group WHERE id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
+        if (!resultSet.isBeforeFirst()) {
+            throw new InputException("Элемента с таким id не найдено");
+        }
         resultSet.next();
         return resultSet.getInt(1);
+    }
+
+
+    public void removeFirst(User user) throws SQLException, InputException {
+        String sql = "DELETE FROM person WHERE id IN (SELECT groupadmin FROM study_group WHERE user_id=? LIMIT 1)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, user.getId());
+
+        if (preparedStatement.executeUpdate() == 0) {
+            throw new InputException("Ваша коллекция пуста");
+        }
+
+
     }
 
 }

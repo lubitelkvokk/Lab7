@@ -17,7 +17,6 @@ public class DbConnector {
         Connection connection = DriverManager.getConnection(url,
                 username,
                 password);
-        logger.info("Connection OK!");
         return connection;
     }
 }

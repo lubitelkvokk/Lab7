@@ -17,6 +17,8 @@ import java.net.PortUnreachableException;
 import java.nio.channels.DatagramChannel;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static client.factory.channel.ChannelFactory.getChannel;
 import static client.factory.port.PortFactory.getPort;
@@ -37,7 +39,6 @@ public class StartClient {
         while (true) {
             try {
                 Message message = commandReader.getMessage();
-
                 if (message.getCommand().equals(CommandsEnum.EXECUTE_SCRIPT)) {
 
                     ScriptManager scriptManager = new ScriptManager(reader);
@@ -52,7 +53,7 @@ public class StartClient {
                     scriptManager.clearHistory();
                 } else {
                     message.setUser(UserAuth.getUser());
-                    System.out.println(UserAuth.getUser());
+//                    System.out.println(UserAuth.getUser());
                     ResponseValidator.responseValidate(SendAndGet.sendMessageGetResponse(client, address, message));
                 }
 

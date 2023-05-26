@@ -6,6 +6,7 @@ import mid.commands.CommandsEnum;
 import mid.data.User;
 import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
+import server.exceptions.InputException;
 
 public class ClearCommand implements CommandWithoutData, CommandResultTypeString {
     private CollectionManager collectionManager;
@@ -29,7 +30,7 @@ public class ClearCommand implements CommandWithoutData, CommandResultTypeString
     }
 
     @Override
-    public void execute() {
+    public void execute() throws InputException {
         result = collectionManager.clear(user);
     }
 

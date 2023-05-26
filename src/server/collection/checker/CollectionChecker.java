@@ -25,6 +25,8 @@ public class CollectionChecker {
     }
 
     public void setStorage(LinkedList<StudyGroup> studyGroups) throws InputException {
+        passportService = new PassportService();
+        idService = new IdService();
         for (StudyGroup studyGroup : studyGroups) {
             addId(studyGroup.getId());
             addPassport(studyGroup.getGroupAdmin().getPassportID());

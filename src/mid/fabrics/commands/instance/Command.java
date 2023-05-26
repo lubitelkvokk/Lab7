@@ -7,6 +7,8 @@ import mid.data.User;
 import server.collection.manager.CollectionManager;
 import server.exceptions.InputException;
 
+import java.sql.SQLException;
+
 public interface Command {
 
 

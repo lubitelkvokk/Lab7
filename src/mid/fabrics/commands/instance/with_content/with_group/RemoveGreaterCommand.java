@@ -9,6 +9,8 @@ import mid.fabrics.commands.instance.outputI.CommandResultTypeString;
 import server.collection.manager.CollectionManager;
 import server.exceptions.InputException;
 
+import java.sql.SQLException;
+
 public class RemoveGreaterCommand implements CommandWithGroup, CommandResultTypeString {
     private CollectionManager collectionManager;
     private CommandsEnum name = CommandsEnum.REMOVE_GREATER;
@@ -36,7 +38,7 @@ public class RemoveGreaterCommand implements CommandWithGroup, CommandResultType
 
 
     @Override
-    public void execute() throws InputException {
+    public void execute() throws InputException{
         result = collectionManager.removeGreater(user,studyGroup);
     }
 
