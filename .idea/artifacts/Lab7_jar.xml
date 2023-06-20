@@ -3,9 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Lab7_jar</output-path>
     <root id="archive" name="Lab7.jar">
       <element id="module-output" name="Lab7" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/gson-2.10.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/postgresql-42.5.4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/gson-2.10.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

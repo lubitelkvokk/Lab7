@@ -107,7 +107,7 @@ public class StudyGroupService implements StudyGroupDAO {
         preparedStatement.setInt(9, group.getId());
         preparedStatement.setInt(10, user.getId());
         if (preparedStatement.executeUpdate() == 0) {
-            throw new InputException("Элемента из вашей коллекции с таким id не найдено");
+            throw new InputException("ownerError");
         }
 
     }
@@ -169,7 +169,7 @@ public class StudyGroupService implements StudyGroupDAO {
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (!resultSet.isBeforeFirst()) {
-            throw new InputException("Элемента с таким id не найдено");
+            throw new InputException("missingElement");
         }
         resultSet.next();
         return resultSet.getInt(1);
@@ -182,7 +182,7 @@ public class StudyGroupService implements StudyGroupDAO {
         preparedStatement.setInt(1, user.getId());
 
         if (preparedStatement.executeUpdate() == 0) {
-            throw new InputException("Ваша коллекция пуста");
+            throw new InputException("emptyCollectionException");
         }
 
 

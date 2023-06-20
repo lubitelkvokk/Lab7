@@ -18,9 +18,13 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 
@@ -29,22 +33,22 @@ public class Server {
     private static final Logger logger = Logger.getLogger(Server.class.getName());
 
     public static void main(String[] args) throws IOException {
-
-        ExecutorService executor = Executors.newCachedThreadPool();
-
         DatagramChannel server = DatagramChannel.open();
+        server.configureBlocking(false);
         server.bind(new InetSocketAddress(Integer.parseInt(args[0])));
 
+        ExecutorService executor = Executors.newFixedThreadPool(10);
 
         while (true) {
             ByteBuffer byteBuffer = ByteBuffer.allocate(65535);
             SocketAddress socketAddress = server.receive(byteBuffer);
-            byteBuffer.flip();
-            byte[] buf = byteBuffer.array();
-            logger.info("Обработка клиента" + socketAddress);
-            NewClientHandler clientHandler = new NewClientHandler(server, buf, socketAddress);
-            Thread thread = new Thread(clientHandler);
-            executor.submit(thread);
+            if (socketAddress != null) {
+                byteBuffer.flip();
+                byte[] buf = byteBuffer.array();
+                logger.info("Обработка клиента " + socketAddress);
+                NewClientHandler clientHandler = new NewClientHandler(server, buf, socketAddress);
+                executor.submit(clientHandler);
+            }
         }
     }
 }

@@ -36,11 +36,11 @@ public class StartClient {
         InetSocketAddress address = new InetSocketAddress("127.0.0.1", Integer.parseInt(args[0].trim()));
         DatagramChannel client = getChannel();
         client.connect(address);
+
         while (true) {
             try {
                 Message message = commandReader.getMessage();
                 if (message.getCommand().equals(CommandsEnum.EXECUTE_SCRIPT)) {
-
                     ScriptManager scriptManager = new ScriptManager(reader);
                     //получаем список сообщений, который необходимо выполнить
                     scriptManager.getMessagesFromFile(message.getData());

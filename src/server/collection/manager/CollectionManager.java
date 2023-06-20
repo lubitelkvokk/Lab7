@@ -18,12 +18,16 @@ import server.handler.client_processing.UserAuth;
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CollectionManager {
     private static final Logger logger = Logger.getLogger(CollectionManager.class.getName());
 
+
+    private Lock studyGroupsLock = new ReentrantLock();
     private LinkedList<StudyGroup> studyGroups;
     private final CollectionChecker collectionChecker;
 
@@ -78,55 +82,68 @@ public class CollectionManager {
             logger.warning(e.getMessage());
             throw new InputException("Ошибка при добавлении");
         }
-        studyGroups.add(studyGroup);
-        return "Элемент успешно добавлен";
+
+        try {
+            studyGroupsLock.lock();
+            studyGroups.add(studyGroup);
+        } finally {
+            studyGroupsLock.unlock();
+        }
+        return "addResult";
     }
 
     public synchronized String addIfMin(User user, StudyGroup studyGroup) throws InputException {
         if (studyGroups.stream().noneMatch(x -> x.compareTo(studyGroup) > 0)) {
-
             return add(user, studyGroup);
         } else {
-            throw new InputException("Данный элемент не минимальный");
+            throw new InputException("addIfMinException");
         }
     }
 
-    public synchronized String removeGreater(User user, StudyGroup studyGroup) throws InputException {
+    public String removeGreater(User user, StudyGroup studyGroup) throws InputException {
 
+        studyGroupsLock.lock();
         try {
             PersonService personService = new PersonService();
             personService.removeGreater(user, studyGroup);
         } catch (SQLException e) {
-            throw new InputException("Ошибка запроса на удаление больших элементов");
+            throw new InputException("databaseError");
+        } finally {
+            studyGroupsLock.unlock();
         }
         if (studyGroups.removeIf(x -> x.compareTo(studyGroup) > 0)) {
             collectionChecker.setStorage(studyGroups);
-            return "Удаление прошло успешно";
+            return "removeGreaterElementsInformation";
         } else {
-            throw new InputException("Больших элементов не найдено");
+            throw new InputException("removeGreaterElementsException");
         }
     }
 
 
     // TODO
-    public synchronized String update(User user, StudyGroup studyGroup) throws InputException {
+    public String update(User user, StudyGroup studyGroup) throws InputException {
 
+        studyGroupsLock.lock();
         try {
-            StudyGroupService studyGroupService = new StudyGroupService();
-            studyGroupService.updateStudyGroup(user, studyGroup);
-        } catch (InputException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InputException("Ошбика базы данных при обновлении значения элемента");
+            try {
+                StudyGroupService studyGroupService = new StudyGroupService();
+                studyGroupService.updateStudyGroup(user, studyGroup);
+            } catch (InputException e) {
+                throw e;
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new InputException("databaseError");
+            }
+            studyGroup.setUser(user);
+            // TODO В этом месте происходит замена, но почему-то программа доходит до исключения
+            return studyGroups.stream().filter(x -> studyGroup.getId().equals(x.getId())).findFirst()
+                    .map(x -> {
+                        studyGroups.set(studyGroups.indexOf(x), studyGroup);
+                        return "editingStudyGroupInformation";
+                    }).get();
+        } finally {
+            studyGroupsLock.unlock();
         }
-        studyGroup.setUser(user);
-        // TODO В этом месте происходит замена, но почему-то программа доходит до исключения
-        return studyGroups.stream().filter(x -> studyGroup.getId().equals(x.getId())).findFirst()
-                .map(x -> {
-                    studyGroups.set(studyGroups.indexOf(x), studyGroup);
-                    return "Обновление прошло успешно";
-                }).get();
 //        throw new InputException("Группы с таким id не найдено");
     }
 
@@ -158,7 +175,7 @@ public class CollectionManager {
             PersonService personService = new PersonService();
             personService.removeAllPeople(user);
         } catch (SQLException e) {
-            throw new InputException("Ошибка при взаимодействии с базой данных");
+            throw new InputException("databaseError");
         }
 
         List<StudyGroup> groupsToRemove = studyGroups.stream()
@@ -167,7 +184,7 @@ public class CollectionManager {
 
         studyGroups.removeAll(groupsToRemove);
         collectionChecker.setStorage(studyGroups);
-        return "Элементы вашей коллекции были очищены";
+        return "clearResult";
     }
 
     public synchronized String exit() {
@@ -193,7 +210,7 @@ public class CollectionManager {
     public synchronized StudyGroup minByName(User user) {
         StudyGroup minByName = null;
         if (studyGroups.isEmpty()) {
-            throw new NullPointerException("Коллекция пустая");
+            throw new NullPointerException("emptyCollectionException");
         }
         return studyGroups.stream()
                 .min(Comparator.comparing(StudyGroup::getName))
@@ -206,14 +223,14 @@ public class CollectionManager {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new InputException("Ошибка при удалении первого элемента коллекции");
+            throw new InputException("deleteException");
         }
         if (studyGroups.size() == 0) {
-            throw new InputException("Коллекция уже пустая");
+            throw new InputException("emptyCollectionException");
         } else {
             studyGroups.remove(0);
             collectionChecker.setStorage(studyGroups);
-            return ("Первый элемент коллекции удален.");
+            return ("firstElementDeletingInformation");
         }
     }
 

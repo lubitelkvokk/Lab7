@@ -16,7 +16,8 @@ public enum Color implements Serializable {
 
     public static Color getColorByName(String name) {
         for (Color color : Color.values()) {
-            if (color.name.equals(name)) {
+            if (color.name.equals(name.toLowerCase())) {
+//                System.out.println(color);
                 return color;
             }
         }

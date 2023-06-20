@@ -63,6 +63,7 @@ public class PersonService implements PersonDAO {
     private Person getPerson(ResultSet resultSet) throws SQLException {
         Person result = new Person();
         result.setPassportID(resultSet.getString("passportId"));
+//        System.out.println(resultSet.getString("eyeColor"));
         result.setEyeColor(Color.getColorByName(resultSet.getString("eyeColor")));
         result.setHeight(resultSet.getLong("height"));
         result.setName(resultSet.getString("name"));
@@ -112,7 +113,7 @@ public class PersonService implements PersonDAO {
         preparedStatement.setInt(1, user.getId());
         preparedStatement.setInt(2, studyGroup.getStudentsCount());
         if (preparedStatement.executeUpdate() == 0) {
-            throw new InputException("Больших элементов не найдено");
+            throw new InputException("removeGreaterElementsException");
 
         }
     }

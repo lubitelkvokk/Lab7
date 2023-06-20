@@ -69,7 +69,10 @@ public class NewClientHandler implements Runnable {
 
                 Command command = CommandFabric.createCommand(request);
                 command.setUser(request.getUser());
+
                 Message response = commandExecutor.runCommand(command);
+
+//                System.out.println(response.getStudyGroups());
                 MessageSender.sendMessage(server, response, client);
             }
 
@@ -79,7 +82,7 @@ public class NewClientHandler implements Runnable {
             try {
                 logger.warning(e.getMessage());
                 MessageSender.sendMessage(server, new Message(CommandsEnum.RESPONSE_ERR,
-                        "Ошибка базы данных>"), client);
+                        "databaseError"), client);
             } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }

@@ -11,6 +11,7 @@ public class UserAuth {
 
     public static boolean handMessage(Message message) throws SQLException {
         User user = message.getUser();
+        System.out.println(message.getUser());
         if (user == null) {
             return false;
         }

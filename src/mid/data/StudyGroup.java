@@ -2,6 +2,7 @@ package mid.data;
 
 
 
+
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private int studentsCount; //Значение поля должно быть больше 0
+    private Integer studentsCount; //Значение поля должно быть больше 0
     private int shouldBeExpelled; //Значение поля должно быть больше 0
     private int transferredStudents; //Значение поля должно быть больше 0
 
@@ -23,11 +24,11 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     private User user;
 
     public StudyGroup( String name,
-                      Coordinates coordinates,
-                      ZonedDateTime creationDate,
-                      int studentsCount, int shouldBeExpelled,
-                      int transferredStudents,
-                      Semester semesterEnum, Person groupAdmin) {
+                       Coordinates coordinates,
+                       ZonedDateTime creationDate,
+                       int studentsCount, int shouldBeExpelled,
+                       int transferredStudents,
+                       Semester semesterEnum, Person groupAdmin) {
 //        this.id = id;
         this.name = name;
         this.coordinates = coordinates;

@@ -5,9 +5,11 @@ package mid.data;
 import lombok.Data;
 
 import java.io.Serializable;
+
 @Data
 public class Coordinates implements Serializable {
-    private long x;
+    private static final long serialVersionUID = 304669350;
+    private Long x;
     private Double y; //Значение поля должно быть больше -909, Поле не может быть null
 
     public Coordinates(long x, Double y)  {
