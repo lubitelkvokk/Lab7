@@ -48,10 +48,7 @@ public class NewClientHandler implements Runnable {
 
             if (!UserAuth.handMessage(request)) {
                 MessageSender.sendMessage(server, new Message(CommandsEnum.RESPONSE_ERR,
-                        "Ошибка аутентификации пользователя\n" +
-                                "Авторизация: login\n" +
-                                "Регистрация: register\n"), client);
-
+                        "authenticationError"), client);
             } else if (request.getCommand().equals(CommandsEnum.LOGIN_USER)) {
                 MessageSender.sendMessage(server, new Message(CommandsEnum.RESPONSE_TEXT,
                         "Авторизация прошла успешно"), client);

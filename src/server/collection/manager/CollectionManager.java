@@ -154,6 +154,7 @@ public class CollectionManager {
             for (StudyGroup x : studyGroups) {
                 if (x.getId().equals(id)) {
                     studyGroups.remove(x);
+                    collectionChecker.setStorage(studyGroups);
                     return "Удаление прошло успешно";
                 }
             }
