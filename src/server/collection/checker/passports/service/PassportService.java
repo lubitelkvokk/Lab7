@@ -14,7 +14,7 @@ public class PassportService {
 
     public void add(String passport) throws InputException {
         if (passportStorage.hasEqualPassport(passport)){
-            throw new InputException("Введены не уникальные паспортные данные");
+            throw new InputException("notUniquePassportData");
         }
         passportStorage.add(passport);
     }

@@ -80,7 +80,7 @@ public class CollectionManager {
             throw new InputException(e.getMessage());
         } catch (SQLException e) {
             logger.warning(e.getMessage());
-            throw new InputException("Ошибка при добавлении");
+            throw new InputException("databaseException");
         }
 
         try {
